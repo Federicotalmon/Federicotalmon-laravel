@@ -16,13 +16,13 @@ class ConsultorioSeeder extends Seeder
     public function run()
     {
         $consultorio1 = new Consultorio();
-        $consultorio1->direccion = '25 de mayo 1087';
-        $consultorio1->telefono = 434508;
+        $consultorio1->direccion = 'Calle falsa 123';
+        $consultorio1->telefono = 4444444 ;
         $consultorio1->save();
 
         $consultorio2 = new Consultorio();
-        $consultorio2->direccion = '9 de julio 1040';
-        $consultorio2->telefono = 421521;
+        $consultorio2->direccion = 'Avenida Siempre viva 742';
+        $consultorio2->telefono = 1234567;
         $consultorio2->save();
 
     }

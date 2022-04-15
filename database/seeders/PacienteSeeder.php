@@ -19,24 +19,24 @@ class PacienteSeeder extends Seeder
         $now = Carbon :: now();
         $paciente1 = new Paciente();
 
-        
-        $paciente1->dni=39157369;
-        $paciente1->email="federicotalmon@gmail.com";
+        $date1 = Carbon::parse('12/05/1956')->format('d-m-Y');
+        $paciente1->dni=123321;
+        $paciente1->email="homerojay@gmail.com";
         $paciente1->fecha_nacimiento = $now;
         $paciente1->sexo = 'H';
-        $paciente1->telefono = 5024107; 
-        $paciente1->obra_social_cuit = 202020; 
+        $paciente1->telefono = 9999999; 
+        $paciente1->obra_social_cuit = 111111; 
         $paciente1->save();
 
         $paciente2 = new Paciente();
 
-        $date2 = Carbon::parse('1995-09-04');
-        $paciente2->dni=39157370;
-        $paciente2->email="matiastalmon@gmail.com";
+        $date2 = Carbon::parse('12/06/1962')->format('d-m-Y');
+        $paciente2->dni=91827364;
+        $paciente2->email="seniorabouvier@gmail.com";
         $paciente2->fecha_nacimiento = $date2;
-        $paciente2->sexo = 'H';
-        $paciente2->telefono = 5024107; 
-        $paciente2->obra_social_cuit = 434324; 
+        $paciente2->sexo = 'M';
+        $paciente2->telefono = 555555; 
+        $paciente2->obra_social_cuit = 333333; 
         $paciente2->save();
 
 

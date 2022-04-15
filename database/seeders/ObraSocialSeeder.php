@@ -16,18 +16,18 @@ class ObraSocialSeeder extends Seeder
     public function run()
     {
         $os1 = new Obra_social();
-        $os1->cuit = 202020;
-        $os1->nombre = "IOSFA";
+        $os1->cuit = 111111;
+        $os1->nombre = "Obra uno";
         $os1->save();
 
         $os2 = new Obra_social();
-        $os2->cuit = 13202020;
-        $os2->nombre = "Avalian";
+        $os2->cuit = 22222222;
+        $os2->nombre = "Obra dos";
         $os2->save();
 
         $os3 = new Obra_social();
-        $os3->cuit = 434324;
-        $os3->nombre = "OSDE";
+        $os3->cuit = 333333;
+        $os3->nombre = "Obra tres";
         $os3->save();
 
            }
