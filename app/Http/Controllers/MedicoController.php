@@ -9,15 +9,12 @@ use App\Models\Obra_social;
 
 class MedicoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function cargarMedicos()
     {
-         $medicos = Medico::getMedicosObrasSociales();
+         
          $listaEspecialidades = Medico::especialidades();
+         $medicos = Medico::getMedicosObrasSociales();
          $listaObras = ObraSocialController::getNombresObras();
          return view('medicos.medicosView', ['medicos' => $medicos,'nombres_obras' => $listaObras,'especialidades' =>$listaEspecialidades]);
    
