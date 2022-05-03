@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('consultorios', function (Blueprint $table) {
-            $table->id();
-            $table->string('direccion');
-            $table->integer('telefono');
+        Schema::create('secretarios', function (Blueprint $table) {
+            $table->string('nombre_usuario');
+            $table->unsignedBigInteger('medico_matricula');
+            $table->foreign('medico_matricula')->references('matricula')->on('medicos')->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('consultorios');
+        Schema::dropIfExists('secretarios');
     }
 };
