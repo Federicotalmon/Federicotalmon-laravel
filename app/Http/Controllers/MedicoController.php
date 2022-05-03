@@ -12,10 +12,10 @@ class MedicoController extends Controller
    
     public function cargarMedicos()
     {
-         
-         $listaEspecialidades = Medico::especialidades();
-         $medicos = Medico::getMedicosObrasSociales();
          $listaObras = ObraSocialController::getNombresObras();
+         $medico = new Medico();
+         $listaEspecialidades = $medico::especialidades();
+         $medicos = $medico::getMedicosObrasSociales();
          return view('medicos.medicosView', ['medicos' => $medicos,'nombres_obras' => $listaObras,'especialidades' =>$listaEspecialidades]);
    
     }
