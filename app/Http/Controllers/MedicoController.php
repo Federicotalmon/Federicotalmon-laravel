@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Medico;
 use App\Models\Obra_social;
-use Database\Seeders\ObraSocialSeeder;
 
 class MedicoController extends Controller
 {
