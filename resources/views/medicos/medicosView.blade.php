@@ -5,7 +5,7 @@
     <h1>Medicos</h1>
     <form method="POST" action="{{route('medicosPost')}}">
         @csrf
-        <select class="p-2 bg-light border" name="drop-obras" class="form-select" aria-label="Default select example">
+        <select class="p-2 bg-light border" name="drop-obras" class="form-select" >
             <option hidden>Obra social</option>
             <option >Todas</option>
             @foreach($nombres_obras as $obra)
@@ -13,7 +13,7 @@
             @endforeach          
         </select>
 
-        <select  class="p-2 bg-light border" name="drop-especialidades" class="form-select" aria-label="Default select example">
+        <select  class="p-2 bg-light border" name="drop-especialidades" class="form-select" >
         <option hidden>Especialidad</option>
         <option >Todas </option>
         @foreach($especialidades as $especialidad)
