@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Medico;
+use App\Models\medico;
 use App\Models\Obra_social;
 
 class MedicoController extends Controller
