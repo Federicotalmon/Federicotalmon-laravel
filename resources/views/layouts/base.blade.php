@@ -23,6 +23,9 @@
           <a class="nav-link" href="{{route('turnos_de_paciente')}}">Pacientes</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="{{route('obras_sociales')}}">Obras Sociales</a>
+        </li>
+        <li class="nav-item">
           <form method="POST" action="{{ route('logout') }}">
             @csrf
             <a class="nav-link" href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">

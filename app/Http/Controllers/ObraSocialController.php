@@ -11,14 +11,11 @@ class ObraSocialController extends Controller
        return Obra_social::getNombresObras();
     }
     
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+  
+    public function getObras()
     {
-        //
+        $obras = Obra_social::getObras();
+        return view('obras_sociales.obrasView',['obras'=>$obras]);
     }
 
     /**

@@ -2,39 +2,51 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\ObraSocialController;
+use App\Http\Controllers\PacienteController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('turnos/{matricula}/fecha/',
-[TurnoController::class,'getTurnosMedicoFecha'])
-->name('turnos.getTurnosMedicoFecha')->middleware(['auth']);
+Route::get('obras_sociales', [ObraSocialController::class, 'getObras'])
+    ->name('obras_sociales')->middleware(['auth']);;
 
-    
-Route::get('medicos','App\Http\Controllers\MedicoController@cargarMedicos')
-->name('medicos')->middleware(['auth']);
+Route::post(
+    'turnos/{matricula}/fecha/',
+    [TurnoController::class, 'getTurnosMedicoFecha']
+)
+    ->name('turnos.getTurnosMedicoFecha')->middleware(['auth']);
 
-Route::get('medicos/{matricula}','App\Http\Controllers\TurnoController@getTurnosMedico')
-->name('turnos_de_medico')->middleware(['auth']);
+Route::post(
+    'turnos/paciente',
+    [PacienteController::class, 'getTurnosPaciente']
+)
+    ->name('pacientes.getTurnosPaciente')->middleware(['auth']);
 
-Route::post('medicos','App\Http\Controllers\MedicoController@cargarMedicosObrasEspecialidades')
-->name('medicosPost')->middleware(['auth']);
 
-Route::get('turnos_de_paciente','App\Http\Controllers\PacienteController@seleccionarPaciente')
-->name('turnos_de_paciente')->middleware(['auth']);
+Route::get('medicos', 'App\Http\Controllers\MedicoController@cargarMedicos')
+    ->name('medicos')->middleware(['auth']);
 
-Route::get('volver_a_turnos',function(){
+Route::get('medicos/{matricula}', 'App\Http\Controllers\TurnoController@getTurnosMedico')
+    ->name('turnos_de_medico')->middleware(['auth']);
+
+Route::post('medicos', 'App\Http\Controllers\MedicoController@cargarMedicosObrasEspecialidades')
+    ->name('medicosPost')->middleware(['auth']);
+
+Route::get('turnos_de_paciente', 'App\Http\Controllers\PacienteController@getTurnosPacientes')
+    ->name('turnos_de_paciente')->middleware(['auth']);
+
+Route::get('volver_a_turnos', function () {
     return redirect()->route('turnos_de_paciente');
 })
-->name('volver')->middleware(['auth']);
-
-Route::post('turnos_de_paciente/turnos', 'App\Http\Controllers\PacienteController@mostrarPaciente')
-->middleware(['auth']);
+    ->name('volver')->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
- 
-require __DIR__.'/auth.php';
+
+
+
+require __DIR__ . '/auth.php';

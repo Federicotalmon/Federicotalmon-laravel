@@ -23,6 +23,15 @@ class Paciente extends Model
         return $this->hasMany('App\Models\Turno','dni_paciente','dni');
     }
 
+    public static function getTurnosTodosPacientes(){
+        return DB::table('pacientes')
+        ->join('turnos','dni_paciente','=','dni')
+        ->join('estados','id_estado','=','estados.id')
+        ->join('medicos','medicos.matricula','=','turnos.matricula_medico')
+        ->whereColumn('estados.id','turnos.id_estado')
+        ->select('medicos.nombre','turnos.fecha','turnos.dni_paciente','estados.estado','turnos.matricula_medico','turnos.detalles')
+        ->get();
+       }   
     public static function getTurnosPaciente($dni){
         return DB::table('pacientes')
         ->join('turnos','dni_paciente','=','dni')

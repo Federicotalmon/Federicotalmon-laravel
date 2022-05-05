@@ -13,10 +13,15 @@ class PacienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function seleccionarPaciente()
+    public function getTurnosPacientes()
     {
-        return view('pacientes.pacienteIngresarDNI');
+        $turnos_pacientes = Paciente::getTurnosTodosPacientes();
+        if ($turnos_pacientes->isEmpty())
+            return view('pacientes.turnosPaciente', ['turnos' => null]);
+        else
+            return view('pacientes.turnosPaciente', ['turnos' => $turnos_pacientes]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +52,6 @@ class PacienteController extends Controller
      */
     public function show($id)
     {
-       
     }
 
     /**
@@ -85,13 +89,13 @@ class PacienteController extends Controller
     {
         //
     }
-    public function mostrarPaciente(Request $request){
+    public function getTurnosPaciente(Request $request)
+    {
         $dni = $request->input('dni');
         $turnos_paciente = Paciente::getTurnosPaciente($dni);
         if ($turnos_paciente->isEmpty())
-            return view('pacientes.turnosPaciente',['turnos'=>null]);
+            return view('pacientes.turnosPaciente', ['turnos' => null]);
         else
-            return view('pacientes.turnosPaciente',['turnos'=>$turnos_paciente]);
+            return view('pacientes.turnosPaciente', ['turnos' => $turnos_paciente]);
     }
-
 }

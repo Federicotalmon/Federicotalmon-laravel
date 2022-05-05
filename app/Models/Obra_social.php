@@ -31,5 +31,11 @@ class Obra_social extends Model
         ->select('nombre')
         ->get();
     }
+
+    public static function getObras(){
+        return DB::table('obras_sociales')
+        ->select('cuit','nombre')
+        ->get();
+    }
     
 }

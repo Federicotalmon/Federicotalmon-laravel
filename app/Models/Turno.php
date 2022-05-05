@@ -30,7 +30,7 @@ class Turno extends Model
         ->join('estados','turnos.id_estado','=','estados.id')
         ->where('medicos.matricula','=',$matricula)
         ->whereColumn('estados.id','turnos.id_estado')
-        ->select('turnos.fecha','estados.estado','medicos.nombre','medicos.matricula')
+        ->select('turnos.fecha','estados.estado','medicos.nombre','medicos.matricula','turnos.dni_paciente','turnos.detalles')
         ->orderBy('turnos.fecha')
         ->get();  
        }
@@ -44,7 +44,7 @@ class Turno extends Model
         ->where('medicos.matricula','=',$matricula)
         ->whereColumn('estados.id','turnos.id_estado')
         ->whereBetween('fecha',[$desde, $hasta])
-        ->select('turnos.fecha','estados.estado','medicos.nombre','medicos.matricula')
+        ->select('turnos.fecha','estados.estado','medicos.nombre','medicos.matricula','turnos.dni_paciente','turnos.detalles')
         ->orderBy('turnos.fecha')
         ->get();  
     }

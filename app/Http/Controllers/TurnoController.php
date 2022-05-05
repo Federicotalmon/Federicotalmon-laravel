@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Turno;
+use App\Models\Estado;
 use Illuminate\Database\Eloquent\Collection;
 
 
@@ -13,8 +14,8 @@ class TurnoController extends Controller
     
     public function getTurnosMedico($matricula){
 
-            $turnos_sin_separar = Turno::getTurnosMedico($matricula);
-
+        $turnos_sin_separar = Turno::getTurnosMedico($matricula);
+        $estados = Estado::getEstados();
         $medico = Turno::getMedico($matricula);
 
         $turnos = new Collection();
@@ -30,18 +31,18 @@ class TurnoController extends Controller
             $dia_mes_anio=$dia."-".$mes."-".$anio;
 
             $hora= $date_arr[1];
-            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado];
+            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado,$turno_sin_separar->dni_paciente,$turno_sin_separar->detalles,$matricula ];
             $turnos->push($turno);
 
         }
         
-        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'matricula'=>$matricula]);
+        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'matricula'=>$matricula,'estados'=>$estados]);
     }
 
     public function getTurnosMedicoFecha(Request $request, $matricula){
        
         $fecha = $request->input('input');
-        
+        $estados = Estado::getEstados();
         $turnos_sin_separar = Turno::getTurnosMedicoFecha($matricula,$fecha);
 
         $medico = Turno::getMedico($matricula);
@@ -59,12 +60,12 @@ class TurnoController extends Controller
             $dia_mes_anio=$dia."-".$mes."-".$anio;
 
             $hora= $date_arr[1];
-            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado];
+            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado,$turno_sin_separar->dni_paciente,$turno_sin_separar->detalles,$matricula];
             $turnos->push($turno);
 
         }
         
-        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'matricula'=>$matricula]);
+        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'estados'=>$estados,'matricula'=>$matricula]);
     }
 
 
