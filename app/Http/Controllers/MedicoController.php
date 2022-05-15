@@ -5,73 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\medico;
-use App\Models\Obra_social;
+
 
 class MedicoController extends Controller
 {
-   
+
     public function cargarMedicos()
     {
-         $medicos = Medico::getMedicosObrasSociales();
-         $listaEspecialidades = Medico::especialidades();
-         $listaObras = ObraSocialController::getNombresObras();
-         return view('medicos.medicosView', ['medicos' => $medicos,'nombres_obras' => $listaObras,'especialidades' =>$listaEspecialidades]);
-   
+        $medicos = $this->getMedicosObrasSociales();
+        $listaEspecialidades = $this->especialidades();
+        $listaObras = ObraSocialController::getNombresObras();
+        return view('medicos.medicosView', ['medicos' => $medicos, 'nombres_obras' => $listaObras, 'especialidades' => $listaEspecialidades]);
     }
 
-    
-    public function cargarMedicosObrasEspecialidades(Request $request){ 
-        
+
+
+    public function cargarMedicosObrasEspecialidades(Request $request)
+    {
         $obras_query = $request->input('drop-obras');
         $especialidades_query = $request->input('drop-especialidades');
-        $listaEspecialidades = Medico::especialidades();
-        $listaObras = Obra_social::getNombresObras();
-        $obra = Obra_social::where('nombre','=',$obras_query)->get()->first();
-        
-        
-        if(($obras_query=='Obra social' || $obras_query=='Todas') && ($especialidades_query=='Especialidad' || $especialidades_query=='Todas')){
-    
-            $medicos = $medicos = DB::table('medicos')
-            ->join('medicos_obras_sociales','medicos.matricula','=','medicos_obras_sociales.matricula')
-            ->join('obras_sociales','medicos_obras_sociales.cuit','=','obras_sociales.cuit')
-            ->select('medicos.nombre as nombre_medico','medicos.matricula','medicos.especialidad','obras_sociales.nombre as nombre_obra',)
-            ->get() ;
-        }
-        
-        if(!($obras_query=='Obra social' || $obras_query=='Todas') && ($especialidades_query=='Especialidad' || $especialidades_query=='Todas')){
-            
-            $medicos = $medicos = DB::table('medicos')
-            ->join('medicos_obras_sociales','medicos.matricula','=','medicos_obras_sociales.matricula')
-            ->join('obras_sociales','medicos_obras_sociales.cuit','=','obras_sociales.cuit')
-            ->select('medicos.nombre as nombre_medico','medicos.matricula','medicos.especialidad','obras_sociales.nombre as nombre_obra',)
-            ->where('obras_sociales.cuit','=',$obra->cuit)->get() ;
-        }
-    
-        if(($obras_query=='Obra social' || $obras_query=='Todas') && !($especialidades_query=='Especialidad' || $especialidades_query=='Todas')){
-            
-            $medicos = $medicos = DB::table('medicos')
-            ->join('medicos_obras_sociales','medicos.matricula','=','medicos_obras_sociales.matricula')
-            ->join('obras_sociales','medicos_obras_sociales.cuit','=','obras_sociales.cuit')
-            ->where('medicos.especialidad','=',$especialidades_query)
-            ->select('medicos.nombre as nombre_medico','medicos.matricula','medicos.especialidad','obras_sociales.nombre as nombre_obra',)
-            ->get() ;
-        }
-    
+        $listaEspecialidades = $this->especialidades();
+        $listaObras = ObraSocialController::getNombresObras();
+        $obra = ObraSocialController::getObra($obras_query);
 
-        if(!($obras_query=='Obra social' || $obras_query=='Todas') && !($especialidades_query=='Especialidad' || $especialidades_query=='Todas')){
-            
-            $medicos = $medicos = DB::table('medicos')
-            ->join('medicos_obras_sociales','medicos.matricula','=','medicos_obras_sociales.matricula')
-            ->join('obras_sociales','medicos_obras_sociales.cuit','=','obras_sociales.cuit')
-            ->where('medicos.especialidad','=',$especialidades_query)
-            ->select('medicos.nombre as nombre_medico','medicos.matricula','medicos.especialidad','obras_sociales.nombre as nombre_obra',)
-            ->where('obras_sociales.cuit','=',$obra->cuit)->get() ;
-        }
+        $medicos = medico::join('medicos_obras_sociales', 'medicos.matricula', '=', 'medicos_obras_sociales.matricula')
+            ->join('obras_sociales', 'medicos_obras_sociales.cuit', '=', 'obras_sociales.cuit')
+            ->get(['medicos.nombre as nombre_medico', 'medicos.matricula', 'medicos.especialidad', 'obras_sociales.nombre as nombre_obra']);
 
-        return view('medicos.medicosView', ['medicos' => $medicos,'nombres_obras' => $listaObras,'especialidades' =>$listaEspecialidades]);
-    
+        if ($especialidades_query != 'Especialidad' && $especialidades_query != 'Todas')
+            $medicos = $medicos->where('especialidad', '=', $especialidades_query);
+
+        if ($obras_query != 'Obra social' && $obras_query != 'Todas')
+            $medicos = $medicos->where('nombre_obra', '=', $obras_query);
+
+
+        return view('medicos.medicosView', ['medicos' => $medicos, 'nombres_obras' => $listaObras, 'especialidades' => $listaEspecialidades]);
     }
-/**
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -134,9 +105,36 @@ class MedicoController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
-    
+
+    public function getMedicosObrasSociales()
+    {
+        return Medico::join('medicos_obras_sociales', 'medicos.matricula', '=', 'medicos_obras_sociales.matricula')
+            ->join('obras_sociales', 'medicos_obras_sociales.cuit', '=', 'obras_sociales.cuit')
+            ->get(['medicos.nombre as nombre_medico', 'medicos.matricula', 'medicos.especialidad', 'obras_sociales.nombre as nombre_obra']);
+    }          
+      
+    public static function especialidades()
+    {
+        return Medico::distinct()->get(['especialidad']);
+    }
+
+    public static function todos()
+    {
+        return Medico::get(['nombre', 'especialidad', 'matricula']);
+    }
+
+
+    public static function getMedico($matricula)
+    {
+        return Medico::find($matricula);
+    }
+
+    public static function getNombreMedico($matricula)
+    {
+        $medico = Medico::find($matricula)->nombre;
+        return $medico;
+    }
 
 
 }

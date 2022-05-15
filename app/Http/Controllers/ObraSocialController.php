@@ -7,17 +7,18 @@ use Illuminate\Http\Request;
 
 class ObraSocialController extends Controller
 {
+
+    public static function getObra($obras_query){
+        return Obra_social::where('nombre', '=', $obras_query)->get()->first();
+    }
     public static function getNombresObras(){
-       return Obra_social::getNombresObras();
+        return Obra_social::distinct()->get(['nombre']);
     }
     
-  
-    public function getObras()
-    {
-        $obras = Obra_social::getObras();
-        return view('obras_sociales.obrasView',['obras'=>$obras]);
+    public static function getObras(){
+        $obras_sociales = Obra_social::get(['cuit','nombre']);
+        return view('obras_sociales.obrasView',['obras'=>$obras_sociales]);
     }
-
     /**
      * Show the form for creating a new resource.
      *

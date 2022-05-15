@@ -26,16 +26,7 @@ class Obra_social extends Model
         return $this->belongsToMany('App\Models\Medico','medicos_obras_sociales','cuit', 'matricula');
     }
 
-    public static function getNombresObras(){
-        return DB::table('obras_sociales')
-        ->select('nombre')
-        ->get();
-    }
 
-    public static function getObras(){
-        return DB::table('obras_sociales')
-        ->select('cuit','nombre')
-        ->get();
-    }
+
     
 }

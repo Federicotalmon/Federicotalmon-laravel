@@ -12,8 +12,4 @@ class Estado extends Model
     public function Turno(){
         return $this->hasMany('App\Models\Turno');
     }
-
-    public static function getEstados(){
-        return Estado::get();
-    }
 }

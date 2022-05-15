@@ -5,70 +5,70 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Turno;
-use App\Models\Estado;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Controllers\EstadoController;
+use Carbon\Carbon;
 
 
 class TurnoController extends Controller
 {
-    
-    public function getTurnosMedico($matricula){
 
-        $turnos_sin_separar = Turno::getTurnosMedico($matricula);
-        $estados = Estado::getEstados();
-        $medico = Turno::getMedico($matricula);
-
-        $turnos = new Collection();
-        
-        foreach($turnos_sin_separar as $turno_sin_separar){
-            $fecha = $turno_sin_separar->fecha;
-            $date_arr= explode(" ", $fecha);
-            $anio_mes_dia= explode("-",$date_arr[0]);
-            $anio = $anio_mes_dia[0];  
-            $mes = $anio_mes_dia[1];
-            $dia = $anio_mes_dia[2];
-
-            $dia_mes_anio=$dia."-".$mes."-".$anio;
-
-            $hora= $date_arr[1];
-            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado,$turno_sin_separar->dni_paciente,$turno_sin_separar->detalles,$matricula ];
-            $turnos->push($turno);
-
-        }
-        
-        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'matricula'=>$matricula,'estados'=>$estados]);
+    public function getTurnosMedico($matricula)
+    {
+        $turnos_sin_separar = TurnoController::turnosMedico($matricula);
+        return $this->poblarTurnosMedico($turnos_sin_separar, $matricula);
     }
 
-    public function getTurnosMedicoFecha(Request $request, $matricula){
-       
+    public function getTurnosMedicoFecha(Request $request, $matricula)
+    {
         $fecha = $request->input('input');
-        $estados = Estado::getEstados();
-        $turnos_sin_separar = Turno::getTurnosMedicoFecha($matricula,$fecha);
-
-        $medico = Turno::getMedico($matricula);
-
-        $turnos = new Collection();
-        
-        foreach($turnos_sin_separar as $turno_sin_separar){
-            $fecha = $turno_sin_separar->fecha;
-            $date_arr= explode(" ", $fecha);
-            $anio_mes_dia= explode("-",$date_arr[0]);
-            $anio = $anio_mes_dia[0];  
-            $mes = $anio_mes_dia[1];
-            $dia = $anio_mes_dia[2];
-
-            $dia_mes_anio=$dia."-".$mes."-".$anio;
-
-            $hora= $date_arr[1];
-            $turno=[$turno_sin_separar->nombre,$dia_mes_anio,$hora,$turno_sin_separar->estado,$turno_sin_separar->dni_paciente,$turno_sin_separar->detalles,$matricula];
-            $turnos->push($turno);
-
-        }
-        
-        return view('turnos.turnosDeMedico',['turnos'=>$turnos,'nombre'=>$medico->nombre,'estados'=>$estados,'matricula'=>$matricula]);
+        $turnos_sin_separar = TurnoController::turnosMedicoFecha($matricula, $fecha);
+        return $this->poblarTurnosMedico($turnos_sin_separar, $matricula);
     }
 
 
+
+    private static function poblarTurnosMedico($turnos_sin_separar, $matricula)
+    {
+        $estados = EstadoController::getEstados();
+        $medico = MedicoController::getMedico($matricula);
+        $turnos = new Collection();
+
+        foreach ($turnos_sin_separar as $turno_sin_separar) {
+            $fecha = date_create($turno_sin_separar->fecha);
+            $dia = date_format($fecha, 'd-m-Y');
+            $hora = date_format($fecha, 'H:i:s');
+
+            $turno = [$turno_sin_separar->nombre, $dia, $hora, $turno_sin_separar->estado, $turno_sin_separar->dni_paciente, $turno_sin_separar->detalles, $matricula];
+            $turnos->push($turno);
+        }
+
+        return view('turnos.turnosDeMedico', ['turnos' => $turnos, 'nombre' => $medico->nombre, 'estados' => $estados, 'matricula' => $matricula]);
+    }
+
+    public static function turnosMedico($matricula)
+    {
+        return Turno::join('medicos', 'matricula_medico', '=', 'matricula')
+            ->join('estados', 'turnos.id_estado', '=', 'estados.id')
+            ->where('medicos.matricula', '=', $matricula)
+            ->whereColumn('estados.id', 'turnos.id_estado')
+            ->orderBy('turnos.fecha')
+            ->get(['turnos.fecha', 'estados.estado', 'medicos.nombre', 'medicos.matricula', 'turnos.dni_paciente', 'turnos.detalles']);
+    }
+
+    public static function turnosMedicoFecha($matricula, $fecha)
+    {
+        $desde = Carbon::createFromFormat('d-m-Y', $fecha)->startOfDay();
+        $hasta = Carbon::createFromFormat('d-m-Y', $fecha)->endOfDay();
+
+        return Turno::join('medicos', 'matricula_medico', '=', 'matricula')
+            ->join('estados', 'turnos.id_estado', '=', 'estados.id')
+            ->where('medicos.matricula', '=', $matricula)
+            ->whereColumn('estados.id', 'turnos.id_estado')
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->orderBy('turnos.fecha')
+            ->get(['turnos.fecha', 'estados.estado', 'medicos.nombre', 'medicos.matricula', 'turnos.dni_paciente', 'turnos.detalles']);
+    }
 
     /**
      * Store a newly created resource in storage.

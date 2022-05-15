@@ -5,9 +5,10 @@ use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\ObraSocialController;
 use App\Http\Controllers\PacienteController;
 
+
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('obras_sociales', [ObraSocialController::class, 'getObras'])
     ->name('obras_sociales')->middleware(['auth']);;
@@ -37,14 +38,15 @@ Route::post('medicos', 'App\Http\Controllers\MedicoController@cargarMedicosObras
 Route::get('turnos_de_paciente', 'App\Http\Controllers\PacienteController@getTurnosPacientes')
     ->name('turnos_de_paciente')->middleware(['auth']);
 
+Route::get('turnos/detalles/{id}', 'App\Http\Controllers\PacienteController@getDetallesTurno')
+    ->name('detalles_turno')->middleware(['auth']);
+
 Route::get('volver_a_turnos', function () {
     return redirect()->route('turnos_de_paciente');
 })
     ->name('volver')->middleware(['auth']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+
 
 
 
