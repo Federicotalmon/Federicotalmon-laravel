@@ -14,7 +14,7 @@ class Secretario extends Model
     public $incrementing = false; 
 
     public function medico(){
-        return $this->hasOne('App\Models\Medico', 'foreign_key', 'local_key');
+        return $this->hasOne('App\Models\medico', 'foreign_key', 'local_key');
     }
 
 

@@ -23,7 +23,7 @@ class Obra_social extends Model
     }
 
     public function medicos(){
-        return $this->belongsToMany('App\Models\Medico','medicos_obras_sociales','cuit', 'matricula');
+        return $this->belongsToMany('App\Models\medico','medicos_obras_sociales','cuit', 'matricula');
     }
 
 
