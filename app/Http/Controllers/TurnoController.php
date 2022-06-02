@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\NuevoTurnoRequest;
 use App\Http\Requests\EditarTurnoRequest;
 use Carbon\Carbon;
-use App\Http\Controllers\EstadoController;
+
 
 class TurnoController extends Controller
 {
