@@ -4,6 +4,8 @@
 @section('contenido')
 <h1>Obras Sociales</h1>
 
+<a href="{{route('dashboard')}}" class="btn btn-primary col-xs-3 m-2">Volver</a>
+
 @if(session()->has('message'))
 <div class="alert alert-success">
     {{ session()->get('message') }}

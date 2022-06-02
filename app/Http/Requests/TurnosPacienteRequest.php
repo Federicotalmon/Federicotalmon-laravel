@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TurnosPacienteRequest extends FormRequest
@@ -25,7 +24,7 @@ class TurnosPacienteRequest extends FormRequest
     public function rules()
     {
         return [
-            'dni' => 'exists:turnos,dni_paciente'
+            'dni' => 'required|exists:turnos,dni_paciente'
             
         ];
     }
@@ -34,6 +33,7 @@ class TurnosPacienteRequest extends FormRequest
     public function messages()
     {
         return [
+            'dni.required' => 'Error, debes escribir un DNI.',
             'dni.exists' => 'No existen turnos relacionados con ese DNI.'
         ];
     }

@@ -1,6 +1,7 @@
         @extends('layouts.base')
         @section('contenido')
 
+        <a href="{{route('pacientes')}}" class="btn btn-primary col-xs-3 m-2">Volver</a>
         <h1>Crear nuevo paciente</h1>
 
         @if($errors->any())

@@ -6,7 +6,9 @@
     {{ session()->get('message') }}
 </div>
 @endif
-<button class="btn btn-primary">Volver</button>
+
+<a href="{{route('dashboard')}}" class="btn btn-primary col-xs-3 m-2">Volver</a>
+
 <h1>Turnos del medico {{$nombre}}</h1>
 <div class="p-2 bg-light border">
     <form method='POST' action="{{ route('turnos.getTurnosMedicoFecha', ['matricula' => $matricula]) }}">

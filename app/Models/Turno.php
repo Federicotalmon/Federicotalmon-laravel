@@ -16,7 +16,7 @@ class Turno extends Model
         return $this->belongsTo('App\Models\Paciente', 'dni_paciente', 'dni');
     }
 
-    public function Medico()
+    public function medico()
     {
         return $this->belongsTo('App\Models\medico', 'matricula_medico', 'matricula');
     }

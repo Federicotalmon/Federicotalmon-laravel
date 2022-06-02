@@ -11,6 +11,8 @@
     </div>
     @endif
 
+    <a href="{{route('pacientes')}}" class="btn btn-primary col-xs-3 m-2">Volver</a>
+    
         <form method="POST" action="{{route('paciente_update',['dni' => $paciente->dni])}}"  class="m-2">
             @csrf
             <div class="row">
