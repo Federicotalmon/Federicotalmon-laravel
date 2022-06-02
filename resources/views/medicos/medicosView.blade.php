@@ -6,6 +6,7 @@
 
 <h1>Medicos</h1>
 
+
 <form method="POST" action="{{route('medicosPost')}}">
     @csrf
     <select class="p-2 bg-light border" name="drop-obras" class="form-select">
@@ -28,7 +29,7 @@
 
 
 <div class="containter m-1 border bg-light">
-    @if (($medicos ->count()) == 0)
+    @if (($medicosObras ->isEmpty()))
     <p class="text-danger">No se encontraron medicos para esta consulta</p>
     @else
     <table class="table table-striped">
@@ -42,12 +43,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($medicos as $medico)
+            @foreach($medicosObras as $medicoObra)
             <tr>
-                <td>{{ $medico->nombre_obra}}</td>
-                <td><a href="{{ route('turnos_de_medico', ['matricula' => $medico->matricula]) }}">{{ $medico->nombre_medico}}</a></td>
-                <td>{{ $medico->matricula}}</td>
-                <td>{{ $medico->especialidad}}</td>
+                <td>{{ $medicoObra->obra }}</td>
+                <td><a href="{{ route('turnos_de_medico', ['matricula' => $medicoObra->matricula] ) }}">{{ $medicoObra->nombre }}</a></td>
+                <td>{{ $medicoObra->matricula }}</td>
+                <td>{{ $medicoObra->especialidad }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -56,4 +57,3 @@
 </div>
 
 @endsection
-

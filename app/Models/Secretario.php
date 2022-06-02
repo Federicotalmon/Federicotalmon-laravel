@@ -20,3 +20,5 @@ class Secretario extends Model
 
 }
 
+
+

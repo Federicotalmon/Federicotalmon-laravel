@@ -20,7 +20,10 @@
           <a class="nav-link" href="{{route('medicos')}}">Medicos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{route('turnos_de_paciente')}}">Pacientes</a>
+          <a class="nav-link" href="{{route('get_turnos_pacientes')}}">Turnos Pacientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('pacientes')}}">Pacientes</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{route('obras_sociales')}}">Obras Sociales</a>

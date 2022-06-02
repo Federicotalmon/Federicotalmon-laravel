@@ -1,8 +1,11 @@
 @extends('layouts.base')
 
 @section('contenido')
-<button class="btn btn-primary">Volver</button>
+
+<a href="{{route('medicos')}}" class="btn btn-primary col-xs-3 m-2">Volver</a>
+
 <h1>Turnos del medico {{$nombre}}</h1>
+
 <div class="p-2 bg-light border">
     <form method='POST' action="{{ route('turnos.getTurnosMedicoFecha', ['matricula' => $matricula]) }}">
         @csrf
@@ -21,72 +24,6 @@
     </form>
 </div>
 
-<!-- Si el usuario es secretario -->
-<div class="m-2 bg-white">
-    <button type="submit" class="btn btn-primary " id="btnGuardar">Nuevo Turno</button>
-</div>
-
-<form method='POST' id="formDetalles" class="mr-1" style="display:none;">
-    <div class="row">
-        <div class="col">
-            <p>DNI del paciente</p>
-        </div>
-        <div class="col">
-            <p>Fecha</p>
-        </div>
-        <div class="col">
-            <p>Estado del turno</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <input type="text" id='textDNI' class="form-control">
-        </div>
-        <div class="col">
-            <input type="text" id='textFecha' class="form-control">
-        </div>
-
-        <div class="col">
-            <select class="p-2 bg-light border" id="dropEstado" class="form-select">
-                @foreach($estados as $estado)
-                <option>{{ $estado->estado}}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <p>Nombre del Medico</p>
-        </div>
-        <div class="col">
-            <p>Matricula</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <input type="text" id='textNombreMedico' class="form-control" disabled>
-        </div>
-        <div class="col">
-            <input type="text" id='textMatricula' class="form-control" disabled>
-        </div>
-    </div>
-    <div>
-        <p>Detalles</p>
-    </div>
-    <div class="row">
-        <textarea id="textDetalles" cols="80" rows="5"></textarea>
-    </div>
-    <div class="btn-group" role="group">
-        <button type="reset" class="m-1 btn btn-primary" id="btnCerrar">Cancelar</button>
-        <button type="submit" name="action" value="nuevo" class="m-1 btn btn-primary" id="btnGuardarNuevo" style="display:none;">Guardar Nuevo</button>
-        <button type="submit" name="action" value="editado" class="m-1 btn btn-primary" id="btnGuardarEditado" style="display:none;">Guardar</button>
-    </div>
-
-</form>
-
-
-<!-- Close si el usuario es secretario -->
-
 <table class="table table-striped">
     <thead>
         <tr>
@@ -94,23 +31,16 @@
             <th scope="col">Fecha</th>
             <th scope="col">Hora</th>
             <th scope="col">Estado</th>
-            <!-- Si el usuario es secretario -->
-            <th scope="col">Opciones</th>
         </tr>
     </thead>
     <tbody>
         @foreach($turnos as $turno)
+
         <tr>
+            <td>{{ $turno[2]->medico->nombre }}</td>
             <td>{{ $turno[0] }}</td>
             <td>{{ $turno[1] }}</td>
-            <td>{{ $turno[2] }}</td>
-            <td>{{ $turno[3] }}</td>
-            <!-- Si el usuario es secretario -->
-            <td>
-                <button class="m-1 btn btn-primary">Eliminar</button>
-                <button class="m-1 btn btn-primary">Editar Turno</button>
-                <button class="m-1 btn btn-primary">Reservar</button>
-            </td>
+            <td>{{ $turno[2]->estado->estado }}</td>
         </tr>
         @endforeach
     </tbody>
