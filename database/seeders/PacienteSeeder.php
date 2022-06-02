@@ -22,7 +22,7 @@ class PacienteSeeder extends Seeder
         $date1 = Carbon::parse('12/05/1956')->format('d-m-Y');
         $paciente1->dni=123321;
         $paciente1->email="homerojay@gmail.com";
-        $paciente1->fecha_nacimiento = $now;
+        $paciente1->fecha_nacimiento = $date1;
         $paciente1->sexo = 'H';
         $paciente1->telefono = 9999999; 
         $paciente1->obra_social_cuit = 111111; 

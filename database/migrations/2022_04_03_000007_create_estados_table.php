@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('secretarios', function (Blueprint $table) {
-            $table->string('nombre_usario');
-            $table->string('password');
-            $table->unsignedBigInteger('medico_matricula');
-            $table->foreign('medico_matricula')->references('matricula')->on('medicos')->onDelete('set null');
+        Schema::create('estados', function (Blueprint $table) {
+            $table->id();
+            $table->string('estado');           
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('secretarios');
+        Schema::dropIfExists('estados');
     }
 };

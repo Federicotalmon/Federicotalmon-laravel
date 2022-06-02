@@ -10,7 +10,7 @@ class Secretario extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'usuario';
+    protected $primaryKey = 'nombre_usuario';
     public $incrementing = false; 
 
     public function medico(){
