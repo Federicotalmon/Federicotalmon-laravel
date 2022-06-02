@@ -16,4 +16,11 @@ class EstadoController extends Controller
         $estado = Estado::find($id)->estado;
         return $estado;
     }
+
+    public static function getIdEstado($nombre){
+    
+        $estado = Estado::where('estado','=',$nombre)->first();
+        return $estado->id;
+    }
 }
+

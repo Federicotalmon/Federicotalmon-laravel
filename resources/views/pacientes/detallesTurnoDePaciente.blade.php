@@ -2,7 +2,7 @@
 
 @section('contenido')
 
-<a href="{{route('turnos_de_paciente')}}" class="btn btn-primary col-xs-3">Volver</a>
+<a href="{{route('get_turnos_pacientes')}}" class="btn btn-primary col-xs-3">Volver</a>
 
 <h1>Detalles del turno</h1>
 

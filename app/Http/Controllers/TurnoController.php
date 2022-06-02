@@ -6,32 +6,54 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Turno;
 use Illuminate\Database\Eloquent\Collection;
-use App\Http\Controllers\EstadoController;
+use App\Http\Requests\NuevoTurnoRequest;
+use App\Http\Requests\EditarTurnoRequest;
 use Carbon\Carbon;
-
+use App\Http\Controllers\EstadoController;
 
 class TurnoController extends Controller
 {
 
     public function getTurnosMedico($matricula)
     {
-        $turnos_sin_separar = TurnoController::turnosMedico($matricula);
+        $turnos_sin_separar = Turno::where('matricula_medico', $matricula)->orderBy('fecha')->get();
         return $this->poblarTurnosMedico($turnos_sin_separar, $matricula);
     }
 
     public function getTurnosMedicoFecha(Request $request, $matricula)
     {
         $fecha = $request->input('input');
-        $turnos_sin_separar = TurnoController::turnosMedicoFecha($matricula, $fecha);
+        $desde = Carbon::createFromFormat('d-m-Y', $fecha)->startOfDay();
+        $hasta = Carbon::createFromFormat('d-m-Y', $fecha)->endOfDay();
+        $turnos_sin_separar = Turno::where('matricula_medico', $matricula)->orderBy('fecha')
+            ->whereBetween('fecha', [$desde, $hasta])
+            ->get();
         return $this->poblarTurnosMedico($turnos_sin_separar, $matricula);
     }
 
+    public function nuevoTurno($matricula)
+    {
 
+        $estados = EstadoController::getEstados();
+        $medico = MedicoController::getMedico($matricula);
+        return view('turnos.turnoNuevo', ['estados' => $estados, 'medico' => $medico]);
+    }
 
-    private static function poblarTurnosMedico($turnos_sin_separar, $matricula)
+    public function editarTurno($matricula, $id)
     {
         $estados = EstadoController::getEstados();
         $medico = MedicoController::getMedico($matricula);
+        $turno = Turno::find($id);
+        $fecha = date('Y-m-d\TH:i', strtotime($turno->fecha));
+        $estado_actual = EstadoController::getNombreEstado($turno->id_estado);
+        return view('turnos.turnoEditar', ['estado_actual' => $estado_actual, 'estados' => $estados, 'medico' => $medico, 'turno' => $turno, 'fecha' => $fecha]);
+    }
+
+
+    public static function poblarTurnosMedico($turnos_sin_separar, $matricula)
+    {
+        $nombre = MedicoController::getNombreMedico($matricula);
+        $estados = EstadoController::getEstados();
         $turnos = new Collection();
 
         foreach ($turnos_sin_separar as $turno_sin_separar) {
@@ -39,68 +61,33 @@ class TurnoController extends Controller
             $dia = date_format($fecha, 'd-m-Y');
             $hora = date_format($fecha, 'H:i:s');
 
-            $turno = [$turno_sin_separar->nombre, $dia, $hora, $turno_sin_separar->estado, $turno_sin_separar->dni_paciente, $turno_sin_separar->detalles, $matricula];
+            $turno = [$dia, $hora, $turno_sin_separar];
             $turnos->push($turno);
         }
 
-        return view('turnos.turnosDeMedico', ['turnos' => $turnos, 'nombre' => $medico->nombre, 'estados' => $estados, 'matricula' => $matricula]);
+        return view('turnos.turnosDeMedico', ['turnos' => $turnos,'nombre' => $nombre, 'matricula' => $matricula]);
     }
 
-    public static function turnosMedico($matricula)
+    public function store(NuevoTurnoRequest $request)
     {
-        return Turno::join('medicos', 'matricula_medico', '=', 'matricula')
-            ->join('estados', 'turnos.id_estado', '=', 'estados.id')
-            ->where('medicos.matricula', '=', $matricula)
-            ->whereColumn('estados.id', 'turnos.id_estado')
-            ->orderBy('turnos.fecha')
-            ->get(['turnos.fecha', 'estados.estado', 'medicos.nombre', 'medicos.matricula', 'turnos.dni_paciente', 'turnos.detalles']);
-    }
-
-    public static function turnosMedicoFecha($matricula, $fecha)
-    {
-        $desde = Carbon::createFromFormat('d-m-Y', $fecha)->startOfDay();
-        $hasta = Carbon::createFromFormat('d-m-Y', $fecha)->endOfDay();
-
-        return Turno::join('medicos', 'matricula_medico', '=', 'matricula')
-            ->join('estados', 'turnos.id_estado', '=', 'estados.id')
-            ->where('medicos.matricula', '=', $matricula)
-            ->whereColumn('estados.id', 'turnos.id_estado')
-            ->whereBetween('fecha', [$desde, $hasta])
-            ->orderBy('turnos.fecha')
-            ->get(['turnos.fecha', 'estados.estado', 'medicos.nombre', 'medicos.matricula', 'turnos.dni_paciente', 'turnos.detalles']);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $turno = new Turno();
+        $fecha = Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
+        $fecha = $fecha->format('Y-m-d H:i:s');
+        $turno->detalles = $request->detalles;
+        $turno->matricula_medico = $request->matricula_medico;
+        $estado = EstadoController::getIdEstado($request->estado_turno);
+        $turno->id_estado = $estado;
+        $turno->fecha = $fecha;
+        if (trim($request->dni_paciente) == '')
+            $turno->dni_paciente == null;
+        else {
+            $turno->dni_paciente = $request->dni_paciente;
+            $request->validate([
+                'dni_paciente' => 'exists:pacientes,dni'
+            ]);
+        }
+        $turno->save();
+        return redirect()->back()->with('message', 'Nuevo turno creado correctamente!');
     }
 
     /**
@@ -110,9 +97,26 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditarTurnoRequest $request, $id)
     {
-        //
+        $turno = Turno::findOrFail($id);
+        $fecha = Carbon::createFromFormat('Y-m-d\TH:i', $request->fecha);
+        $fecha = $fecha->format('Y-m-d H:i:s');
+        $turno->detalles = $request->detalles;
+        $turno->matricula_medico = $request->matricula_medico;
+        $estado = EstadoController::getIdEstado($request->estado_turno);
+        $turno->id_estado = $estado;
+        $turno->fecha = $fecha;
+        if (trim($request->dni_paciente) == '')
+            $turno->dni_paciente == null;
+        else {
+            $turno->dni_paciente = $request->dni_paciente;
+            $request->validate([
+                'dni_paciente' => 'exists:pacientes,dni'
+            ]);
+        }
+        $turno->save();
+        return redirect()->back()->with('message', 'Turno actualizado correctamente!');
     }
 
     /**
@@ -123,6 +127,9 @@ class TurnoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $turno = Turno::findOrFail($id);
+        $matricula = $turno->matricula_medico;
+        $turno->delete();
+        return redirect()->route('turnos_de_medico',$matricula)->with('message', 'Turno eliminado correctamente');
     }
 }

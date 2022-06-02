@@ -16,7 +16,7 @@ class Paciente extends Model
 
 
     public function Obra_social(){
-        return $this->belongsTo('App\Model\Obra_social','obra_social_cuit','cuit');
+        return $this->belongsTo('App\Models\Obra_social','obra_social_cuit','cuit');
     }
 
     public function turnos(){

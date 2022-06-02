@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Turno extends Model
 {
     use HasFactory;
-    protected $fillable = ['estado', 'fecha', 'detalles'];
+    protected $fillable = ['matricula_medico','estado', 'fecha', 'detalles'];
 
     public function Paciente()
     {
@@ -23,6 +23,6 @@ class Turno extends Model
 
     public function Estado()
     {
-        return $this->belongsTo('App\Models\Estado');
+        return $this->belongsTo('App\Models\Estado', 'id_estado', 'id');
     }
 }

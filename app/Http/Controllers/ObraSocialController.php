@@ -3,21 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obra_social;
-use Illuminate\Http\Request;
+use App\Http\Requests\ObraStoreRequest;
+use App\Http\Requests\ObraUpdateRequest;
 
 class ObraSocialController extends Controller
 {
 
-    public static function getObra($obras_query){
+    public static function getObraByCuit($cuit)
+    {
+        return Obra_social::findOrFail($cuit);
+    }
+    public static function getObra($obras_query)
+    {
         return Obra_social::where('nombre', '=', $obras_query)->get()->first();
     }
-    public static function getNombresObras(){
+    public static function getNombresObras()
+    {
         return Obra_social::distinct()->get(['nombre']);
     }
-    
-    public static function getObras(){
-        $obras_sociales = Obra_social::get(['cuit','nombre']);
-        return view('obras_sociales.obrasView',['obras'=>$obras_sociales]);
+
+    public static function getObras()
+    {
+        $obras_sociales = Obra_social::get(['cuit', 'nombre']);
+        return view('obras_sociales.obrasView', ['obras' => $obras_sociales]);
     }
     /**
      * Show the form for creating a new resource.
@@ -26,7 +34,8 @@ class ObraSocialController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('obras_sociales.obraNueva');
     }
 
     /**
@@ -35,9 +44,13 @@ class ObraSocialController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ObraStoreRequest $request)
     {
-        //
+        $obra = new Obra_social();
+        $obra->cuit = $request->cuit;
+        $obra->nombre = $request->nombre;
+        $obra->save();
+        return redirect()->back()->with('message', 'Nueva obra creada correctamente!');
     }
 
     /**
@@ -54,24 +67,29 @@ class ObraSocialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $cuit
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($cuit)
     {
-        //
+        $obra = Obra_social::findOrFail($cuit);
+        return view('obras_sociales.obraEditar', ['obra' => $obra]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $cuit
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ObraUpdateRequest $request, $cuit)
     {
-        //
+        $obra = Obra_social::findOrFail($cuit);
+        $obra->nombre = $request->nombre;
+        $obra->save();
+        return redirect()->back()->with('message', 'Obra actualizada correctamente!');
+
     }
 
     /**
@@ -80,8 +98,10 @@ class ObraSocialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($cuit)
     {
-        //
+        $obra = Obra_social::findOrFail($cuit);
+        $obra->delete();
+        return redirect()->back()->with('message', 'La obra fue eliminada correctamente!');
     }
 }
