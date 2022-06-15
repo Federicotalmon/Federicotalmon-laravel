@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Obra_social extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+    
     protected $table = 'obras_sociales';
+
+    protected $fillable = ['nombre'];
+
     use HasFactory;
 
     protected $primaryKey = 'cuit';
@@ -23,7 +23,10 @@ class Obra_social extends Model
     }
 
     public function medicos(){
-        return $this->belongsToMany('App\Model\Medico','medicos_obras_sociales','id', 'matricula');
+        return $this->belongsToMany('App\Models\Medico','medicos_obras_sociales','cuit', 'matricula');
     }
+
+
+
     
 }

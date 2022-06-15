@@ -10,13 +10,15 @@ class Secretario extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'usuario';
+    protected $primaryKey = 'nombre_usuario';
     public $incrementing = false; 
 
     public function medico(){
-        return $this->hasOne('App\Models\medico', 'foreign_key', 'local_key');
+        return $this->hasOne('App\Models\Medico', 'foreign_key', 'local_key');
     }
 
 
 }
+
+
 

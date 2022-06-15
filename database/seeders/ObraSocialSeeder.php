@@ -30,5 +30,15 @@ class ObraSocialSeeder extends Seeder
         $os3->nombre = "Obra tres";
         $os3->save();
 
+        $os4 = new Obra_social();
+        $os4->cuit = 444444;
+        $os4->nombre = "Obra cuatro";
+        $os4->save();
+
+        $os5 = new Obra_social();
+        $os5->cuit = 555555;
+        $os5->nombre = "Obra cinco";
+        $os5->save();
+
            }
 }
