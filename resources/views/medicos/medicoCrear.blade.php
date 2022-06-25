@@ -35,13 +35,13 @@
     </div>
     <div class="row">
         <div class="col">
-            <input type="number" id='textMatricula' name="matricula" class="form-control" >
+            <input type="number" id='textMatricula' value="{{old('matricula')}}" name="matricula" class="form-control" >
         </div>
         <div class="col">
-            <input id='textNombre' id="textNombre" name="nombre" class="form-control">
+            <input id='textNombre' id="textNombre" name="nombre" value="{{old('nombre')}}" class="form-control">
         </div>
         <div class="col">
-            <input id='textEspecialidad' name="especialidad" class="form-control" >
+            <input id='especialidad' name="especialidad" value="{{old('especialidad')}}" class="form-control" >
         </div>
     </div>
     <div>

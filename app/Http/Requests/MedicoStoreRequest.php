@@ -24,7 +24,9 @@ class MedicoStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'matricula' => 'unique:medicos,matricula',
+            'matricula' => 'required|unique:medicos,matricula',
+            'nombre' => 'required',
+            'especialidad' => 'required',
             
         ];
     }

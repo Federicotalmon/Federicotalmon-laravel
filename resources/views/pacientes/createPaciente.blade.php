@@ -27,13 +27,13 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <input id='dni' name='dni' class="form-control" type="number">
+                    <input id='dni' value="{{old('dni')}}" name='dni' class="form-control" type="number">
                 </div>
                 <div class="col">
-                    <input type="email" id='email' class="form-control" name='email'>
+                    <input type="email" value="{{old('email')}}" id='email' class="form-control" name='email'>
                 </div>
                 <div class="col">
-                    <input type="date" id='fecha_nacimiento' class="form-control" name='fecha_nacimiento'>
+                    <input type="date" id='fecha_nacimiento' value="{{old('fecha_nacimiento')}}" class="form-control" name='fecha_nacimiento'>
                 </div>
             </div>
             <div class="row">
@@ -49,10 +49,10 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <input class="form-control" type="number" id='telefono' name='telefono'>
+                    <input class="form-control" type="number" id='telefono' name='telefono' value="{{old('telefono')}}">
                 </div>
                 <div class="col">
-                    <select class="p-2 m-1 bg-light border" id='drop-obras' name="drop-obras" class="form-select">
+                    <select class="p-2 m-1 bg-light border" id='drop-obras' value="{{old('drop-obras')}}" name="drop-obras" class="form-select">
                         <option hidden value="">Obra social</option>
                         @foreach($obras as $obra)
                         <option>{{$obra -> nombre}}</option>
@@ -60,7 +60,7 @@
                     </select>
                 </div>
                 <div class="col">
-                    <select class="p-2 m-1 bg-light border" id='drop-sexo' name="drop-sexo" class="form-select">
+                    <select class="p-2 m-1 bg-light border" id='drop-sexo' value="{{old('drop-sexo')}}" name="drop-sexo" class="form-select">
                         <option hidden value="">Sexo</option>
                         <option value="M">M</option>
                         <option value="H">H</option>

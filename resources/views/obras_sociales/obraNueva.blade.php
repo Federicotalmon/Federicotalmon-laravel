@@ -32,10 +32,10 @@
     </div>
     <div class="row">
         <div class="col">
-            <input type="number" id='textCUIT' name="cuit" class="form-control" >
+            <input type="number" id='textCUIT' name="cuit" value="{{old('cuit')}}" class="form-control" >
         </div>
         <div class="col">
-            <input id='textNombre' name="nombre" class="form-control" >
+            <input id='textNombre' name="nombre" value="{{old('nombre')}}" class="form-control" >
         </div>
     </div>
     <div>
