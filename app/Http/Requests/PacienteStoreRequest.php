@@ -26,7 +26,7 @@ class PacienteStoreRequest extends FormRequest
         return [
             'dni' => 'required|unique:pacientes,dni',
             'telefono' => 'required',
-            'fecha_nacimiento' => 'required',
+            'fecha_nacimiento' => 'required|before_or_equal:start_date',
             'drop-sexo' => 'required',
             'drop-obras' =>'required',
         ];
@@ -39,6 +39,7 @@ class PacienteStoreRequest extends FormRequest
             'dni.required' => 'Error, debe ingresar un DNI',
             'telefono.required' => 'Error, debe ingresar un Telefono',
             'fecha_nacimiento.required' => 'Error, debe ingresar una fecha',
+            'fecha_nacimiento.before_or_equal' => 'Error, no puede ingresar fechas futuras',
             'drop-sexo.required' => 'Error, debe elegir el sexo del paciente',
             'drop-obras.required' => 'Error, debe ingresar una obra social'
         ];
