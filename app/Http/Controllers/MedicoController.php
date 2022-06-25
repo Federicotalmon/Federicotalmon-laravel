@@ -62,7 +62,6 @@ class MedicoController extends Controller
         $medico->nombre = $request->nombre;
         $medico->especialidad = $request->especialidad;
         $medico->save();
-        $medico->obra_social()->attach(0);
         return redirect()->back()->with('message', 'Medico creado correctamente!');
     }
 
@@ -143,6 +142,13 @@ class MedicoController extends Controller
         $medicos = Medico::all();
         foreach ($medicos as $medico) {
             $obras = $medico->obra_social;
+            if($obras->count() == 0)
+            $medicosObras->push((object)[
+                'obra' => null,
+                'nombre' => $medico->nombre,
+                'matricula' => $medico->matricula,
+                'especialidad' => $medico->especialidad,
+            ]);
             foreach ($obras as $obra) {
                 $medicosObras->push((object)[
                     'obra' => $obra->nombre,

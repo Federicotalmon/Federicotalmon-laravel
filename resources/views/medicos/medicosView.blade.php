@@ -50,7 +50,12 @@
         <tbody>
             @foreach($medicosObras as $medicoObra)
             <tr>
-                <td>{{ $medicoObra->obra }}</td>
+                @if ($medicoObra->obra==null)
+                    <td>Sin obras asociadas</td>
+                @else
+                    <td>{{ $medicoObra->obra }}</td>
+                @endif
+
                 <td><a href="{{ route('turnos_de_medico', ['matricula' => $medicoObra->matricula] ) }}">{{ $medicoObra->nombre }}</a></td>
                 <td>{{ $medicoObra->matricula }}</td>
                 <td>{{ $medicoObra->especialidad }}</td>
@@ -60,14 +65,15 @@
                         <button type="submit" class="btn btn-primary col-xs-3">Eliminar Medico</a>
                     </form>
                 </td>
-
                 <td><a href="{{ route('medicos_edit',['matricula' => $medicoObra->matricula]) }}" class="btn btn-primary col-xs-3">Editar medico</a></td>
+                @if ($medicoObra->obra != null)
                 <td>
                     <form method="POST" action="{{ route('medicos_obra_delete', ['matricula' => $medicoObra->matricula , 'obra' => $medicoObra->obra ]) }}">
                         @csrf
                         <button type="submit" class="btn btn-primary col-xs-3">Borrar obra de medico</a>
                     </form>
                 </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

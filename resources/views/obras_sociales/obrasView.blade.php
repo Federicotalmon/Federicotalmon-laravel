@@ -41,7 +41,6 @@
                 class="btn btn-primary col-xs-3">Editar
                 </a>
             </td>
-
         </tr>
         @endforeach
     </tbody>
