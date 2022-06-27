@@ -26,13 +26,13 @@ Route::post('turno/medico/delete/{id}', 'App\Http\Controllers\TurnoController@de
 Route::get('medicos/edit/{matricula}', 'App\Http\Controllers\MedicoController@edit')->name('medicos_edit')->middleware(['auth']);
 Route::get('medicos/cargar', 'App\Http\Controllers\MedicoController@cargarMedicos')->name('medicos')->middleware(['auth'])->middleware(['auth']);
 Route::get('medicos/create', 'App\Http\Controllers\MedicoController@create')->name('medicos_create')->middleware(['auth'])->middleware(['auth']);
+Route::get('medicos/edit_obras/{matricula}', 'App\Http\Controllers\MedicoController@cargarObrasMedico')->name('medicos_obras_edit')->middleware(['auth']);
+Route::post('medicos/obras/agregar/{matricula}/{cuit}', 'App\Http\Controllers\MedicoController@agregarObraSocial')->name('medico_agregar_obra')->middleware(['auth']);
+Route::post('medicos/obras/quitar/{matricula}/{cuit}', 'App\Http\Controllers\MedicoController@quitarObraSocial')->name('medico_quitar_obra')->middleware(['auth']);
 Route::post('medicos/delete/{matricula}', 'App\Http\Controllers\MedicoController@destroy')->name('medicos_delete')->middleware(['auth']);
 Route::post('medicos/obras/especialidades', 'App\Http\Controllers\MedicoController@cargarMedicosObrasEspecialidades')->name('medicosPost')->middleware(['auth'])->middleware(['auth']);
 Route::post('medicos/store', 'App\Http\Controllers\MedicoController@store')->name('medicos_store')->middleware(['auth']);
 Route::post('medicos/update/{matricula}', 'App\Http\Controllers\MedicoController@update')->name('medicos_update')->middleware(['auth']);
-Route::post('medicos/updateObras/{matricula}', 'App\Http\Controllers\MedicoController@agregarObrasSociales')->name('medicos_obras_update')->middleware(['auth']);
-Route::post('medicos/deleteObras/{matricula}/{obra}', 'App\Http\Controllers\MedicoController@eliminarObrasSociales')->name('medicos_obra_delete')->middleware(['auth']);
-
 
 Route::get('turnos/paciente', 'App\Http\Controllers\PacienteController@getTurnosPaciente')->name('get_turnos_paciente')->middleware(['auth']);
 Route::get('turnos/pacientes', 'App\Http\Controllers\PacienteController@getTurnosPacientes')->name('get_turnos_pacientes')->middleware(['auth']);

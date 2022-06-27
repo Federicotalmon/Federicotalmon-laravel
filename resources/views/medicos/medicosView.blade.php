@@ -66,14 +66,6 @@
                     </form>
                 </td>
                 <td><a href="{{ route('medicos_edit',['matricula' => $medicoObra->matricula]) }}" class="btn btn-primary col-xs-3">Editar medico</a></td>
-                @if ($medicoObra->obra != null)
-                <td>
-                    <form method="POST" action="{{ route('medicos_obra_delete', ['matricula' => $medicoObra->matricula , 'obra' => $medicoObra->obra ]) }}">
-                        @csrf
-                        <button type="submit" class="btn btn-primary col-xs-3">Borrar obra de medico</a>
-                    </form>
-                </td>
-                @endif
             </tr>
             @endforeach
         </tbody>

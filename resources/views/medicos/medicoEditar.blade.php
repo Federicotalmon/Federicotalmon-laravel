@@ -48,21 +48,10 @@
         <label for="btnGuardar">Guardar cambios de medico</label>
         <button class="m-1 btn btn-primary" id="btnGuardar">Guardar</button>
     </div>
-</form>
-
-<form method="POST" class=".bg-light m-1" action="{{route('medicos_obras_update',['matricula' => $medico->matricula])}}">
-    @csrf
     <div>
-        <label for="btnUpdateObras">Agregar obra social </label>
-        <select class="p-2 m-1 bg-light border" name="drop-obras" class="form-select">
-            <option hidden value="">Obra social</option>
-            @foreach($obras as $obra)
-            <option value="{{$obra->nombre}}">{{ $obra->nombre}}</option>
-            @endforeach
-        </select>
-    </div>
-    <div>
-        <button type="submit" id="btnUpdateObras" class="btn btn-primary col-xs-3 m-1">Guardar</button>
+    <a id="btnEditarObra" href="{{route('medicos_obras_edit',['matricula' => $medico->matricula])}}" 
+                class="btn btn-primary col-xs-3">Editar Obras
+                </a>
     </div>
 </form>
 @endsection

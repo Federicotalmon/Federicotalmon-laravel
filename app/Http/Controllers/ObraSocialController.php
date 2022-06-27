@@ -73,7 +73,7 @@ class ObraSocialController extends Controller
     public function edit($cuit)
     {
         $obra = Obra_social::findOrFail($cuit);
-        return view('obras_sociales.obraEditar', ['obra' => $obra]);
+        return view('obras_sociales.ObraEditar', ['obra' => $obra]);
     }
 
     /**
@@ -86,9 +86,10 @@ class ObraSocialController extends Controller
     public function update(ObraUpdateRequest $request, $cuit)
     {
         $obra = Obra_social::findOrFail($cuit);
+        $obra->cuit = $cuit;
         $obra->nombre = $request->nombre;
         $obra->save();
-        return redirect()->back()->with('message', 'Obra actualizada correctamente!');
+        return redirect()->route('obras_sociales')->with('message', 'Obra actualizada correctamente!');
 
     }
 

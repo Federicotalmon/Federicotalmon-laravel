@@ -32,7 +32,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <input type="number" id='cuit' name="cuit" class="form-control" value="{{$obra->cuit}}" readonly >
+            <input type="number" id='cuit' name="cuit" class="form-control" value="{{$obra->cuit}}" readonly>
         </div>
         <div class="col">
             <input id='textNombre' id="nombre" name="nombre" class="form-control" value="{{$obra->nombre}}">

@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\medico;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Http\Requests\MedicoStoreRequest;
-use App\Http\Requests\CrearMedicoObraRequest;
 use App\Http\Requests\EditarMedicoRequest;
+use App\Models\Obra_social;
 use Illuminate\Database\Eloquent\Collection;
 
 class MedicoController extends Controller
@@ -21,6 +20,12 @@ class MedicoController extends Controller
         return view('medicos.medicosView', ['medicosObras' => $medicosObras, 'nombres_obras' => $listaObras, 'especialidades' => $listaEspecialidades]);
     }
 
+    public function cargarObrasMedico($matricula)
+    {
+        $todas = Obra_social::all();
+        $obrasMedico = $this->cuitsMedico($matricula);
+        return view('medicos.medicosObrasEdit', ['matricula' => $matricula,'obrasMedico' => $obrasMedico, 'todas' => $todas]);
+    }
     public function cargarMedicosObrasEspecialidades(Request $request)
     {
         $obras_query = $request->input('drop-obras');
@@ -96,30 +101,17 @@ class MedicoController extends Controller
         return redirect()->back()->with('message', 'Medico actualizado correctamente!');
     }
 
-    public function agregarObrasSociales(CrearMedicoObraRequest $request, $matricula)
-    {
-        $medico = $this->getMedico($matricula);
-        $nombre_obra = $request->input('drop-obras');
-        $cuit = ObraSocialController::getObra($nombre_obra)->cuit;
-        $createdRequest = new Request([
-            'cuit' => $cuit,
-            'matricula' => $matricula
-        ]);
-        $createdRequest->validate([
-            'cuit' => [Rule::unique('medicos_obras_sociales')
-                ->where('matricula', $matricula)]
-        ]);
+    public function agregarObraSocial($matricula,$cuit){
+        $medico = Medico::findOrFail($matricula);
         $medico->obra_social()->attach($cuit);
-        $medico->save();
-        return redirect()->back()->with('message', 'Se agrego la obra social para el medico!');
+        return redirect()->back()->with('message', 'Obra agregada correctamente!');
+
     }
 
-    public function eliminarObrasSociales($matricula, $obra)
-    {
-        $medico = $this->getMedico($matricula);
-        $cuit = ObraSocialController::getObra($obra)->cuit;
+    public function quitarObraSocial($matricula,$cuit){
+        $medico = Medico::findOrFail($matricula);
         $medico->obra_social()->detach($cuit);
-        return redirect()->back()->with('message', 'Se elimino la obra social para el medico!');
+        return redirect()->back()->with('message', 'Obra quitada correctamente!');
     }
 
     /**
@@ -161,7 +153,17 @@ class MedicoController extends Controller
         return $medicosObras;
     }
 
-
+    public static function cuitsMedico($matricula){
+        $medico = Medico::findOrFail($matricula);
+        $obras = $medico ->obra_social;
+        $listObras = new Collection();
+        foreach ($obras as $obra){
+            $listObras->push((object)[
+                'cuit' => $obra->cuit,
+                ]);
+        }
+        return $listObras;
+    }
     public static function especialidades()
     {
         return Medico::distinct()->get(['especialidad']);
